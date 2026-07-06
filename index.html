@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BATU Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- شاشة التحكم بالدخول والتسجيل -->
+    <div id="auth-screen" class="page" style="display:none; overflow-y: auto;">
+        <!-- نموذج تسجيل الدخول (Login) -->
+        <div class="auth-card" id="login-box">
+            <h2>تسجيل الدخول</h2>
+            <p>أدخل بياناتك للوصول إلى الدليل</p>
+            <input type="text" id="login-user" placeholder="اسم المستخدم أو البريد الإلكتروني">
+            <input type="password" id="login-pass" placeholder="كلمة المرور">
+            <button class="login-btn" onclick="handleLogin()">دخول</button>
+            <div class="visitor-link" onclick="toggleAuthBoxes('signup')">ليس لديك حساب؟ إنشاء حساب جديد</div>
+        </div>
+
+        <!-- نموذج إنشاء حساب جديد (Sign Up) -->
+        <div class="auth-card" id="signup-box" style="display: none;">
+            <h2>إنشاء حساب جديد</h2>
+            <p>قم بملء البيانات لإنشاء حسابك</p>
+            <input type="text" id="signup-user" placeholder="اختر اسم مستخدم">
+            <input type="email" id="signup-email" placeholder="البريد الإلكتروني">
+            <input type="password" id="signup-pass" placeholder="اختر كلمة مرور قوية">
+            <button class="login-btn" style="background: #28a745;" onclick="handleSignUp()">تسجيل الحساب</button>
+            <div class="visitor-link" onclick="toggleAuthBoxes('login')">لديك حساب بالفعل؟ تسجيل الدخول</div>
+        </div>
+    </div>
+          
+  <div class="app">
+    <img class="bg" src="images/background.jfif" alt="Background">
+    <div class="overlay"></div>
+
+    <div class="navbar">
+      <div class="logo">BATU Guide</div>
+      <button class="nav-btn" onclick="toggleLang()">🌐</button>
+    </div>
+
+    <!-- HOME -->
+    <div id="home" class="center">
+      <div class="hero">
+        <h1 id="welcome">مرحبًا بك في BATU Guide</h1>
+        <p id="desc">استكشف الجامعة والأقسام والأنشطة</p>
+        <button id="startBtn" class="start-btn" onclick="openPage('main')">ابدأ</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div id="main" class="page">
+      <button class="back-btn" onclick="back('home','main')">الرئيسية</button>
+      <div class="grid">
+        <div class="card" onclick="openPage('university')"><img src="images/background.jfif"><div class="card-content" id="cardUniversity">الجامعة</div></div>
+        <div class="card" onclick="openPage('faqs')"><img src="images/faq.jfif"><div class="card-content" id="cardFaqs">الأسئلة الشائعة</div></div>
+        <div class="card" onclick="openPage('activities')"><img src="images/activities.jfif"><div class="card-content" id="cardActivities">الأنشطة</div></div>
+        <div class="card" onclick="openPage('virtual')"><img src="images/virtual.jfif"><div class="card-content" id="cardVirtual">التجول الافتراضي</div></div>
+      </div>
+    </div>
+
+    <!-- UNIVERSITY -->
+    <div id="university" class="page">
+      <button class="back-btn" onclick="back('main','university')">رجوع</button>
+      <div class="grid">
+        <div class="card" onclick="openPage('industry')"><img src="images/manufacturing and energy.jfif"><div class="card-content" id="industryCard">كلية الصناعة والطاقة</div></div>
+        <div class="card" onclick="openPage('health')"><img src="images/science.jfif"><div class="card-content" id="healthCard">كلية العلوم الصحية التطبيقية</div></div>
+      </div>
+    </div>
+
+    <!-- FAQS -->
+    <div id="faqs" class="page">
+      <button class="back-btn" onclick="back('main','faqs')">رجوع</button>
+      <div class="chat-container">
+        <div class="chat-header" id="faqTitle">المساعد الذكي لجامعة BATU</div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="suggestions-box" id="suggestionsBox"></div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." />
+          <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">إرسال</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITIES -->
+    <div id="activities" class="page">
+        <button class="back-btn" onclick="back('home','activities')">رجوع</button>
+        <div class="grid">
+          <div class="card" onclick="showSectionDetails('sports-info')"><img src="images/sports.jfif"><div class="card-content" id="sportsTxt">رياضة</div></div>
+          <div class="card" onclick="showSectionDetails('events-info')"><img src="images/conference.jfif"><div class="card-content" id="eventsTxt">فعاليات</div></div>
+          <div class="card" onclick="showSectionDetails('triops-info')"><img src="images/travels.jfif"><div class="card-content" id="tripTxt">رحلات</div></div>
+        </div>
+
+        <div class="info" style="margin-top: 20px;">
+          <div id="sports-info" class="details-box" style="display: none; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div class="event-item" style="text-align: right; margin-bottom: 10px; direction: rtl;">
+              <img src="images/football.jfif" alt="دوري كرة القدم" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">إطلاق دوري كرة القدم الخماسية بكلية تكنولوجيا الصناعة والطاقة</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الأنشطة الرياضية 2025</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">أعلن اتحاد طلاب ورعاية شباب جامعة برج العرب التكنولوجية عن فتح باب التسجيل لدوري كرة القدم الخماسية لطلاب الكلية لتعزيز الروح الرياضية والمنافسة الشريفة.</p>
+            </div>
+          </div>
+
+          <div id="events-info" class="details-box" style="display: none; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/azhr.jfif" alt="قافلة الأزهر الشريف" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">جامعة برج العرب التكنولوجية تستضيف قافلة الأزهر الشريف</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الإثنين 20 أكتوبر 2025</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">تستضيف جامعة برج العرب التكنولوجية وفداً من الأزهر الشريف ضمن قافلة شيخ الأزهر بمسرح الجامعة، لتعزيز القيم الأخلاقية والوطنية وتعميق روح الانتماء لدى الطلاب.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/child.jfif" alt="جامعة الطفل" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">اختتام فعاليات جامعة الطفل التكنولوجية بنادي سموحة</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 فعاليات تعليمية مستمرة</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">جامعة برج العرب التكنولوجية تختتم برنامج "جامعة الطفل" بنادي سموحة بعد 3 أشهر من الأنشطة التعليمية، لتكريم الأطفال المشاركين ودعم مواهبهم في مجالات العلوم والابتكار.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/no_bullying.jfif" alt="لا للتنمر" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">جامعة برج العرب التكنولوجية تطلق مبادرة "لا للتنمر لذوي الهمم"</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الأنشطة التوعوية للجامعة</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">نظمت إدارة رعاية الشباب بالجامعة حفلًا لتفعيل المبادرة الرئاسية "مستقبل أفضل للشباب"، شمل ندوة توعوية وفقرات فنية لكورال الجامعة وفريق "أرض الشمس"، لدعم دمج وتمكين ذوي القدرات الخاصة ونشر ثقافة التسامح.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/orphan_day.jfif" alt="يوم اليتيم" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">جامعة برج العرب التكنولوجية تنظم احتفالية بمناسبة «يوم اليتيم»</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الدور المجتمعي والإنساني</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">نظمت إدارة رعاية الشباب بالجامعة احتفالية بمناسبة "يوم اليتيم" بحضور أعضاء مجلس الجامعة. وشملت الفعالية أنشطة ترفيهية وتوزيع هدايا وألعاب على الأطفال لإدخال البهجة إلى قلوبهم.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/waha_connect.jfif" alt="Waha Connect" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">انطلاق النسخة الثالثة من فعالية "Waha Connect" بالمنطقة التكنولوجية</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 ريادة الأعمال والابتكار</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">شهدت المنطقة التكنولوجية ببرج العرب انطلاق النسخة الثالثة من فعالية "Waha Connect" بمشاركة جامعة برج العرب التكنولوجية ونخبة من قادة صناعة الاتصالات، بهدف دعم ريادة الأعمال وتمكين الكفاءات الشابة.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/dialog_session.jfif" alt="جلسة حوارية" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">جلسة حوارية لأمين المجلس الأعلى للتعليم التكنولوجي مع طلاب الجامعة</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 المستقبل المهني والنقابة</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">استقبلت جامعة برج العرب التكنولوجية الدكتور أحمد الجيوشي في زيارة شملت جلسة حوارية مفتوحة مع الطلاب، حيث أكد على دور الخريجين كركيزة للاقتصاد الوطني وأجاب عن استفساراتهم حول مستقبلهم المهني ونقابة التكنولوجيين.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/activity_part.jfif" alt="حفل ختام الأنشطة" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">حفل ختام الأنشطة الطلابية بجامعة برج العرب التكنولوجية</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 ختام العام الجامعي</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">نظّمت الجامعة حفل ختام الأنشطة الطلابية للعام الجامعي وسط أجواء احتفالية مبهجة، شملت فقرات فنية ووطنية وتكريمًا للطلاب المتميزين والمساهمين في إنجاح الفعاليات والأنشطة على مدار العام.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/stay_human.jfif" alt="لقاء لسه إنسان" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">مشاركة متميزة لجامعة برج العرب التكنولوجية في لقاء ذوي الهمم "لسه إنسان"</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 مكتبة الإسكندرية</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">شاركت جامعة برج العرب التكنولوجية في الفعالية الثالثة لذوي الهمم بمكتبة الإسكندرية، حيث استعرض طلابها مشاريع تكنولوجية مبتكرة تدعم دمج وتمكين ذوي الاحتياجات الخاصة في المجتمع.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 10px; direction: rtl;">
+              <img src="images/medical_insurance.jfif" alt="التأمين الطبي" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">ندوة توعوية لطلابها حول نظام التأمين الطبي الشامل</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 ندوة توعوية صحية</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">نظمت الجامعة ندوة موسعة بالتعاون مع شركات التأمين والوساطة لتعريف الطلاب بآليات الاستفادة من نظام التأمين الطبي الشامل الجديد وحقوقهم الطبية خلال فترة التغطية الممتدة حتى نوفمبر 2026.</p>
+            </div>
+          </div>
+
+          <div id="triops-info" class="details-box" style="display: none; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div class="event-item" style="text-align: right; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 15px; direction: rtl;">
+              <img src="images/dahab.jfif" alt="رحلة دهب" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">اتحد طلاب جامعة برج العرب يُعلن عن الرحلة الثانية إلى أرض السحر "دهب"</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الأنشطة الترفيهية والرحلات</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">ينظم اتحاد طلاب الجامعة رحلته الثانية إلى مدينة دهب لأعضاء الاتحاد والطلاب لقضاء وقت ترفيهي مميز ودعم الروابط الطلابية.</p>
+            </div>
+            <div class="event-item" style="text-align: right; margin-bottom: 10px; direction: rtl;">
+              <img src="images/portsaed.jfif" alt="رحلة بورسعيد" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; object-fit: cover;">
+              <h3 style="color: #333; margin: 5px 0;">اتحاد طلاب جامعة برج العرب التكنولوجية يختتم رحلته لمدينة بورسعيد</h3>
+              <p style="color: #666; font-size: 13px; margin: 5px 0;">📅 الأنشطة الترفيهية والرحلات</p>
+              <p style="font-size: 15px; line-height: 1.6; color: #444; margin: 5px 0;">نظمت اتحاد طلاب الجامعة رحلة مميزة لمدينة بورسعيد تحت رعاية رئيس الجامعة، شملت زيارة معالم المدينة مثل حديقة فريال وجبل الملح والأسواق المحلية وسط أجواء ممتعة.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- VIRTUAL TOUR -->
+    <div id="virtual" class="page">
+      <button class="back-btn" onclick="back('main','virtual')">رجوع</button>
+      <iframe src="https://kuula.co/share/collection/7MWpX?logo=0&info=0&fs=1&vr=1&zoom=1&sd=1&thumbs=1"></iframe>
+    </div>
+
+    <!-- INDUSTRY & ENERGY -->
+    <div id="industry" class="page">
+      <button class="back-btn" onclick="back('university','industry')">رجوع</button>
+      <div class="grid">
+        <div class="card" onclick="openPage('it')"><img src="images/it.jfif"><div class="card-content" id="itTxt">تكنولوجيا المعلومات</div></div>
+        <div class="card" onclick="openPage('food')"><img src="images/food.jfif"><div class="card-content" id="foodTxt">تكنولوجيا تصنيع غذائي</div></div>
+        <div class="card" onclick="openPage('railway')"><img src="images/railway.jfif"><div class="card-content" id="railwayTxt">تكنولوجيا سكك الحديد</div></div>
+        <div class="card" onclick="openPage('tractor')"><img src="images/tractor.jfif"><div class="card-content" id="tractorTxt">تكنولوجيا الجرارات الزراعية</div></div>
+        <div class="card" onclick="openPage('textile')"><img src="images/fabric.jfif"><div class="card-content" id="textileTxt">تكنولوجيا الغزل والنسيج</div></div>
+      </div>
+    </div>
+
+    <!-- HEALTH -->
+    <div id="health" class="page">
+      <button class="back-btn" onclick="back('university','health')">رجوع</button>
+      <div class="grid">
+        <div class="card" onclick="openPage('dental')"><img src="images/teeth.jfif"><div class="card-content" id="dentalTxt">تكنولوجيا تركيبات الأسنان</div></div>
+        <div class="card" onclick="openPage('pharma')"><img src="images/medicine.jfif"><div class="card-content" id="pharmaTxt">تكنولوجيا الإنتاج الدوائي</div></div>
+        <div class="card" onclick="openPage('care')"><img src="images/care.jfif"><div class="card-content" id="careTxt">تكنولوجيا الرعاية الصحية</div></div>
+        <div class="card" onclick="openPage('healthit')"><img src="images/ithealth.jfif"><div class="card-content" id="healthItTxt">IT Health</div></div>
+      </div>
+    </div>
+
+
+    <!-- ==================== تفاصيل الأقسام (صناعة وطاقة) ==================== -->
+
+    <!-- 1. تكنولوجيا المعلومات IT -->
+    <div id="it" class="page">
+      <button class="back-btn" onclick="closeDetails('it'); back('industry','it')">رجوع</button>
+      <div class="info">
+        <h2 id="itTitle">تكنولوجيا المعلومات</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('it-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('it-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('it-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="it-info" class="details-box">
+          <p>يهدف قسم <strong>تكنولوجيا المعلومات (IT)</strong> إلى إعداد جيل متميز من التكنولوجيين المؤهلين في مجالات البرمجة، إدارة الشبكات، هندسة البرمجيات، والأمن السيبراني، مع التركيز على التطبيقات العملية المواكبة للثورة الصناعية الرابعة تلبيةً لاحتياجات سوق العمل المحلي والدولي.</p>
+        </div>
+        <div id="it-careers" class="details-box">
+          <p>تتعدد مجالات العمل المتاحة لخريجي القسم وتشمل:</p>
+          <ul>
+            <li>مهندس شبكات ومسؤول عن البنية التحتية للمعلومات (Network Engineer).</li>
+            <li>مطور برمجيات وتطبيقات الهواتف الذكية (Software / Mobile Developer).</li>
+            <li>متخصص في هندسة وتحليل البيانات والذكاء الاصطناعي (Machine Learning Specialist).</li>
+            <li>مسؤول أمن المعلومات والأمن السيبراني (Cyber Security Administrator).</li>
+            <li>مطور ومصمم نظم برمجية مدمجة وإنترنت الأشياء (Embedded Systems Developer).</li>
+          </ul>
+        </div>
+        <div id="it-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('it', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('it', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('it', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('it', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="it-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>رياضيات 2</td></tr>
+                  <tr><td>أساسيات البرمجة بلغة السي (C)</td></tr>
+                  <tr><td>أساسيات الأمن السيبراني</td></tr>
+                  <tr><td>مقدمة في إنترنت الأشياء</td></tr>
+                  <tr><td>اللغة الإنجليزية</td></tr>
+                  <tr><td>مايكروسوفت أوفيس</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="it-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>برمجة الويب 2</td></tr>
+                  <tr><td>برمجة قواعد البيانات</td></tr>
+                  <tr><td>هياكل البيانات</td></tr>
+                  <tr><td>شبكات الحاسب</td></tr>
+                  <tr><td>مقدمة لأساسيات البرمجة بلغة الجافا</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="it-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Network programming</td></tr>
+                  <tr><td>Software Engineering</td></tr>
+                  <tr><td>Mobile programming</td></tr>
+                  <tr><td>CCNA3</td></tr>
+                  <tr><td>Advanced C++</td></tr>
+                  <tr><td>CCNA Security</td></tr>
+                  <tr><td>Embedded System</td></tr>
+                  <tr><td>Algorithms</td></tr>
+                  <tr><td>Distributed Systems</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="it-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Machine Learning</td></tr>
+                  <tr><td>Big Data & Analytics</td></tr>
+                  <tr><td>IOT Security</td></tr>
+                  <tr><td>Robotics</td></tr>
+                  <tr><td>CCNP Switch</td></tr>
+                  <tr><td>Windows Programming II</td></tr>
+                  <tr><td>CCNP Route</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. تكنولوجيا تصنيع غذائي -->
+    <div id="food" class="page">
+      <button class="back-btn" onclick="closeDetails('food'); back('industry','food')">رجوع</button>
+      <div class="info">
+        <h2 id="foodTitle">تكنولوجيا تصنيع غذائي</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('food-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('food-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('food-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="food-info" class="details-box">
+          <p>يركز قسم <strong>تكنولوجيا التصنيع الغذائي</strong> على تزويد الطلاب بالمعارف والتقنيات الحديثة في مجالات حفظ الأغذية وتصنيعها، مراقبة الجودة والسلامة الغذائية، الكيمياء الحيوية للأغذية، وتصميم خطوط الإنتاج بالمصانع لضمان تقديم منتج غذائي صحي وآمن.</p>
+        </div>
+        <div id="food-careers" class="details-box">
+          <p>يمكن لخريجي قسم التصنيع الغذائي العمل في:</p>
+          <ul>
+            <li>مراقبة وضمان الجودة بمصانع وشركات المنتجات الغذائية (QA / QC Specialist).</li>
+            <li>إدارة وتطوير خطوط الإنتاج والتشغيل في كبرى مصانع الأغذية والمشروبات.</li>
+            <li>الهيئات الرقابية والمنظمات الحكومية المعنية بسلامة الغذاء.</li>
+            <li>تطوير وبحث المنتجات الغذائية الجديدة (R&D).</li>
+          </ul>
+        </div>
+        <div id="food-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('food', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('food', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('food', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('food', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="food-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>كيمياء تحليلية</td></tr>
+                  <tr><td>رياضيات 1</td></tr>
+                  <tr><td>تكنولوجيا اللحوم ومنتجاتها</td></tr>
+                  <tr><td>اللغة الانجليزية</td></tr>
+                  <tr><td>أساسيات تكنولوجيا الأغذية</td></tr>
+                  <tr><td>تكنولوجيا منتجات الحبوب</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="food-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>فيزياء</td></tr>
+                  <tr><td>تعبئة الأغذية</td></tr>
+                  <tr><td>تغذية الإنسان</td></tr>
+                  <tr><td>كيمياء مكونات الأغذية</td></tr>
+                  <tr><td>أساسيات الزيوت</td></tr>
+                  <tr><td>لغة إنجليزية متخصصة</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="food-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>إحصاء</td></tr>
+                  <tr><td>هندسة تصنيع الأغذية</td></tr>
+                  <tr><td>كيمياء وتكنولوجيا الزيوت العطرية</td></tr>
+                  <tr><td>تكنولوجيا الإنزيمات</td></tr>
+                  <tr><td>تقييم الأغذية ومراقبة التشريعات</td></tr>
+                  <tr><td>لغة إنجليزية</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="food-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>تكنولوجيا التبريد والتجميد</td></tr>
+                  <tr><td>تكنولوجيا العصائر والمركزات الطبيعية</td></tr>
+                  <tr><td>تأثير عمليات التصنيع على القيمة الغذائية</td></tr>
+                  <tr><td>فساد الأغذية</td></tr>
+                  <tr><td>مقدمة في الإدارة والقيادة</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. تكنولوجيا سكك الحديد -->
+    <div id="railway" class="page">
+      <button class="back-btn" onclick="closeDetails('railway'); back('industry','railway')">رجوع</button>
+      <div class="info">
+        <h2 id="railwayTitle">تكنولوجيا سكك الحديد</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('railway-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('railway-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('railway-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="railway-info" class="details-box">
+          <p>يختص قسم <strong>تكنولوجيا سكك الحديد</strong> بدراسة النظم الميكانيكية والكهربائية والإلكترونية الخاصة بالقاطرات وعربات السكك الحديدية والمترو، بالإضافة إلى تدريب الطلاب على تصميم وإدارة أنظمة الإشارات، صيانة المسارات، والتحكم الآلي لضمان تشغيل آمن ومستدام لشبكات النقل.</p>
+        </div>
+        <div id="railway-careers" class="details-box">
+          <p>تشمل مجالات عمل خريجي تكنولوجيا سكك الحديد ما يلي:</p>
+          <ul>
+            <li>الهيئة القومية لسكك حديد مصر وهيئات مترو الأنفاق والقطارات الكهربائية السريعة (LRT / Monorail).</li>
+            <li>شركات تشغيل وصيانة وتطوير القطارات والقاطرات.</li>
+            <li>الإشراف الفني وهندسة صيانة الإشارات والتحكم والأنظمة اللاسلكية بالسكك الحديدية.</li>
+          </ul>
+        </div>
+        <div id="railway-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('railway', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('railway', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('railway', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('railway', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="railway-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>آلات حرارية</td></tr>
+                  <tr><td>منظومات فرامل</td></tr>
+                  <tr><td>العناصر الأساسية لمسارات السكك الحديدية</td></tr>
+                  <tr><td>الفيزياء</td></tr>
+                  <tr><td>التقارير الفنية</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="railway-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>الدوائر الإلكترونية وأنظمة الفحص</td></tr>
+                  <tr><td>فك وتركيب أجزاء المحرك</td></tr>
+                  <tr><td>إصلاح الآلات الكهربائية</td></tr>
+                  <tr><td>أخلاقيات مهنة</td></tr>
+                  <tr><td>صيانة مسارات السكك الحديدية</td></tr>
+                  <tr><td>ريادة الأعمال</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="railway-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>معدات تحديد موقع القطار</td></tr>
+                  <tr><td>إحصاء</td></tr>
+                  <tr><td>خصائص وتجهيزات الوحدات المتحركة</td></tr>
+                  <tr><td>القاطرات والعربات الدارجة الأخرى</td></tr>
+                  <tr><td>مهارات الاتصال والتواصل</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="railway-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Signaling and Interlocking</td></tr>
+                  <tr><td>Electrical control circuits</td></tr>
+                  <tr><td>Renewable</td></tr>
+                  <tr><td>Electrical Rail Signaling</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. تكنولوجيا الجرارات الزراعية -->
+    <div id="tractor" class="page">
+      <button class="back-btn" onclick="closeDetails('tractor'); back('industry','tractor')">رجوع</button>
+      <div class="info">
+        <h2 id="tractorTitle">تكنولوجيا الجرارات الزراعية</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('tractor-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('tractor-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('tractor-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="tractor-info" class="details-box">
+          <p>يهتم قسم <strong>تكنولوجيا الجرارات والمعدات الزراعية</strong> بإعداد كوادر قادرة على التعامل الفني التكنولوجي مع محركات الديزل، منظومات الري والصرف والميكنة، وإدارة وصيانة الجرارات والآلات الثقيلة المستخدمة في المشاريع الزراعية القومية واستصلاح الأراضي.</p>
+        </div>
+        <div id="tractor-careers" class="details-box">
+          <p>يتيح هذا القسم للخريجين فرص عمل واعدة في مجالات مثل:</p>
+          <ul>
+            <li>شركات ومصانع تصنيع وصيانة المعدات والآلات الزراعية والجرارات.</li>
+            <li>المشاريع الزراعية القومية الكبرى والمزارع الذكية الحديثة (إدارياً وفنياً).</li>
+            <li>توكيلات قطع غيار وصيانة المعدات الهيدروليكية ومحركات الديزل الثقيلة.</li>
+          </ul>
+        </div>
+        <div id="tractor-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('tractor', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('tractor', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('tractor', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('tractor', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="tractor-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>نظم الري والصرف</td></tr>
+                  <tr><td>محركات الآلات الزراعية</td></tr>
+                  <tr><td>نظم صيانة المحطات الهيدروليكية</td></tr>
+                  <tr><td>الفيزياء</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tractor-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>الري المحوري</td></tr>
+                  <tr><td>المضخات</td></tr>
+                  <tr><td>تقارير فنية</td></tr>
+                  <tr><td>نظم زراعة المحاصيل الحقلية والبساتين</td></tr>
+                  <tr><td>أخلاقيات مهنة</td></tr>
+                  <tr><td>ريادة الأعمال</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tractor-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>أساسيات ميكانيكا مائع</td></tr>
+                  <tr><td>إحصاء</td></tr>
+                  <tr><td>ميكانيكا الجر والتربة</td></tr>
+                  <tr><td>ميكنة عمليات النقل والتداول والتغليف</td></tr>
+                  <tr><td>موضوعات في الطاقة والمياه والبيئة</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tractor-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>معدات تدوير المخلفات الزراعية</td></tr>
+                  <tr><td>الأنظمة الكهربية والإلكترونية بالجرارات والمعدات الزراعية</td></tr>
+                  <tr><td>الطاقة الجديدة والمتجددة</td></tr>
+                  <tr><td>المنشآت الزراعية والتحكم البيئي</td></tr>
+                  <tr><td>مهارات الاتصال والتواصل</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 5. تكنولوجيا الغزل والنسيج -->
+    <div id="textile" class="page">
+      <button class="back-btn" onclick="closeDetails('textile'); back('industry','textile')">رجوع</button>
+      <div class="info">
+        <h2 id="textileTitle">تكنولوجيا الغزل والنسيج</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('textile-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('textile-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('textile-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="textile-info" class="details-box">
+          <p>يتناول قسم <strong>تكنولوجيا الغزل والنسيج</strong> المبادئ الهندسية والتكنولوجية لتحويل الألياف والنسيج إلى منتجات جاهزة، والتعرف على أساسيات وميكانيكا ماكينات الغزل، تقنيات الصباغة والطباعة، واختبارات جودة المنسوجات تماشياً مع متطلبات التطوير الصناعي.</p>
+        </div>
+        <div id="textile-careers" class="details-box">
+          <p>تتمثل مجالات عمل خريجي قسم الغزل والنسيج في:</p>
+          <ul>
+            <li>شركات ومصانع الغزل والنسيج والملابس الجاهزة (مهندس جودة أو تشغيل خطوط إنتاج).</li>
+            <li>إدارة أقسام الصباغة والتجهيز والطباعة النسيجية.</li>
+            <li>مختبرات ومعامل الفحص الفني واختبارات النسيج والجودة المتخصصة.</li>
+          </ul>
+        </div>
+        <div id="textile-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('textile', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('textile', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('textile', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('textile', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="textile-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>أساسيات الغزل والنسيج</td></tr>
+                  <tr><td>فحص المنسوجات</td></tr>
+                  <tr><td>ماكينات النسيج 1</td></tr>
+                  <tr><td>اللغة الإنجليزية</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="textile-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>ماكينات الغزل 1</td></tr>
+                  <tr><td>قراءة كتالوج الصيانة</td></tr>
+                  <tr><td>ماكينات النسيج 2</td></tr>
+                  <tr><td>لغة إنجليزية متخصصة</td></tr>
+                  <tr><td>أخلاقيات المهنة</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="textile-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>اختبارات النسيج</td></tr>
+                  <tr><td>تكنولوجيا الطباعة والصباغة</td></tr>
+                  <tr><td>أساسيات التسويق</td></tr>
+                  <tr><td>أقمشة غير منسوجة</td></tr>
+                  <tr><td>حقوق الإنسان</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="textile-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Production systems</td></tr>
+                  <tr><td>Production Maintenance costs</td></tr>
+                  <tr><td>Carpet Production Tech.</td></tr>
+                  <tr><td>Garment Production Tech.</td></tr>
+                  <tr><td>Contemporary International Issues</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== تفاصيل الأقسام (علوم صحية تطبيقة) ==================== -->
+
+    <!-- 1. تكنولوجيا تركيبات الأسنان -->
+    <div id="dental" class="page">
+      <button class="back-btn" onclick="closeDetails('dental'); back('health','dental')">رجوع</button>
+      <div class="info">
+        <h2 id="dentalTitle">تكنولوجيا تركيبات الأسنان</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('dental-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('dental-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('dental-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="dental-info" class="details-box">
+    <p>
+        يهدف قسم <strong>تكنولوجيا تركيبات الأسنان</strong> إلى إعداد تقنيين متميزين ومؤهلين بالمعارف والمهارات العملية اللازمة لتصميم وتصنيع جميع أنواع التركيبات السنية (الثابتة والمتحركة) وأجهزة تقويم الأسنان، باستخدام أحدث التقنيات الرقمية وأنظمة التصميم والخرط الحاسوبي (CAD/CAM) تلبيةً لمتطلبات قطاع طب الأسنان.
+    </p>
+</div>
+        <div id="dental-careers" class="details-box">
+    <p>يمكن لخريجي القسم العمل في:</p>
+    <ul>
+        <li>إدارة وتشغيل معامل تركيبات الأسنان الخاصة والحكومية.</li>
+        <li>تقني متخصص في تصميم التركيبات الرقمية بأنظمة CAD/CAM.</li>
+        <li>مساعد فني في عيادات ومراكز طب الأسنان الكبرى وتجهيزاتها.</li>
+        <li>أخصائي تسويق ودعم فني لدى شركات ومستلزمات طب وتكنولوجيا الأسنان.</li>
+    </ul>
+</div>
+        <div id="dental-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('dental', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('dental', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('dental', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('dental', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="dental-year1" class="year-content">
+            <div class="term-section"><div class="term-title">الترم الأول</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+            <div class="term-section"><div class="term-title">الترم الثاني</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+          </div>
+          <div id="dental-year2" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثانية...</p></div>
+          <div id="dental-year3" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثالثة...</p></div>
+          <div id="dental-year4" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الرابعة...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. تكنولوجيا الإنتاج الدوائي -->
+    <div id="pharma" class="page">
+      <button class="back-btn" onclick="closeDetails('pharma'); back('health','pharma')">رجوع</button>
+      <div class="info">
+        <h2 id="pharmaTitle">تكنولوجيا الإنتاج الدوائي</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('pharma-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('pharma-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('pharma-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="pharma-info" class="details-box"><p>اكتب معلومات قسم الإنتاج الدوائي هنا...</p></div>
+        <div id="pharma-careers" class="details-box"><p>اكتب مجالات عمل القسم هنا...</p></div>
+        <div id="pharma-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('pharma', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('pharma', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('pharma', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('pharma', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="pharma-year1" class="year-content">
+            <div class="term-section"><div class="term-title">الترم الأول</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+            <div class="term-section"><div class="term-title">الترم الثاني</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+          </div>
+          <div id="pharma-year2" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثانية...</p></div>
+          <div id="pharma-year3" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثالثة...</p></div>
+          <div id="pharma-year4" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الرابعة...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. تكنولوجيا الرعاية الصحية -->
+    <div id="care" class="page">
+      <button class="back-btn" onclick="closeDetails('care'); back('health','care')">رجوع</button>
+      <div class="info">
+        <h2 id="careTitle">تكنولوجيا الرعاية الصحية</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('care-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('care-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('care-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        <div id="care-info" class="details-box"><p>اكتب معلومات قسم الرعاية الصحية هنا...</p></div>
+        <div id="care-careers" class="details-box"><p>اكتب مجالات عمل القسم هنا...</p></div>
+        <div id="care-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('care', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('care', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('care', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('care', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          <div id="care-year1" class="year-content">
+            <div class="term-section"><div class="term-title">الترم الأول</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+            <div class="term-section"><div class="term-title">الترم الثاني</div><table class="subjects-table"><thead><tr><th>المادة</th></tr></thead><tbody><tr><td>اكتب مادة 1 هنا</td></tr></tbody></table></div>
+          </div>
+          <div id="care-year2" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثانية...</p></div>
+          <div id="care-year3" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الثالثة...</p></div>
+          <div id="care-year4" class="year-content"><p style="text-align:center; padding:15px; color:#aaa;">السنة الرابعة...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. تكنولوجيا المعلومات الصحية (IT Health) -->
+    <div id="healthit" class="page">
+      <button class="back-btn" onclick="closeDetails('healthit'); back('health','healthit')">رجوع</button>
+      <div class="info">
+        <h2 id="healthItTitle">IT Health (تكنولوجيا المعلومات الصحية)</h2>
+        <div class="sub-grid">
+          <div class="sub-card" onclick="showSectionDetails('healthit-info')"><h3>معلومات عن القسم</h3><p>تعرف على طبيعة الدراسة داخل القسم</p></div>
+          <div class="sub-card" onclick="showSectionDetails('healthit-careers')"><h3>مجالات العمل</h3><p>أين يمكنك العمل بعد التخرج؟</p></div>
+          <div class="sub-card" onclick="showSectionDetails('healthit-subjects')"><h3>الخطة الدراسية (الجدول)</h3><p>اضغط لاختيار الفرقة وعرض المناهج</p></div>
+        </div>
+        
+        <div id="healthit-info" class="details-box">
+          <p>يعد قسم <strong>تكنولوجيا المعلومات الصحية (IT Health)</strong> حلقة الوصل الحيوية بين العلوم الطبية والتقنيات البرمجية الحديثة. يهدف القسم إلى إعداد كوادر تقنية قادرة على إدارة وتطوير الأنظمة الصحية الرقمية، وتأمين السجلات الطبية الإلكترونية، وتطبيق تقنيات الذكاء الاصطناعي لتحليل البيانات الطبية بما يسهم في رفع كفاءة الرعاية الصحية والمستشفيات الذكية.</p>
+        </div>
+        
+        <div id="healthit-careers" class="details-box">
+          <p>يمكن للخريجين العمل في مجالات واسعة ومتنوعة تشهد طلباً هائلاً في سوق العمل، ومنها:</p>
+          <ul>
+            <li>إدارة وتطوير نظم المعلومات بالمستشفيات والمراكز الطبية (HIS).</li>
+            <li>تحليل البيانات الصحية والطبية الكبرى (Healthcare Data Analyst).</li>
+            <li>تأمين وحماية البيانات الصحية السحابية والشبكات الطبية.</li>
+            <li>الشركات التقنية المتخصصة في بناء تطبيقات الذكاء الاصطناعي الطبي والسجلات الإلكترونية (EMR).</li>
+            <li>إدارة مشاريع المعلوماتية الصحية (Health Informatics Project Manager).</li>
+          </ul>
+        </div>
+        
+        <div id="healthit-subjects" class="details-box">
+          <div class="years-selector">
+            <button class="year-btn" onclick="showYearTable('healthit', 'year1', this)">السنة الدراسية الأولى</button>
+            <button class="year-btn" onclick="showYearTable('healthit', 'year2', this)">السنة الدراسية الثانية</button>
+            <button class="year-btn" onclick="showYearTable('healthit', 'year3', this)">السنة الدراسية الثالثة</button>
+            <button class="year-btn" onclick="showYearTable('healthit', 'year4', this)">السنة الدراسية الرابعة</button>
+          </div>
+          
+          <div id="healthit-year1" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الأول</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Anatomy.</td></tr>
+                  <tr><td>Physiology.</td></tr>
+                  <tr><td>chemistry.</td></tr>
+                  <tr><td>Physics.</td></tr>
+                  <tr><td>Mathematics.</td></tr>
+                  <tr><td>Information Technology (IT).</td></tr>
+                  <tr><td>English 1.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Basics of Health Information Management-HIM.</td></tr>
+                  <tr><td>Healthcare information Technology and artificial intelligence.</td></tr>
+                  <tr><td>foundations of health information systems (HIS).</td></tr>
+                  <tr><td>Introduction to Health care systems.</td></tr>
+                  <tr><td>Professionalism and code of ethics in healthcare.</td></tr>
+                  <tr><td>Healthcare facility and safety.</td></tr>
+                  <tr><td>concepts of health and disease.</td></tr>
+                  <tr><td>English Language(2).</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div id="healthit-year2" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الأول</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Medical documentation Technologies.</td></tr>
+                  <tr><td>Electronic medical records and coding system(EMR).</td></tr>
+                  <tr><td>Picture Archiving communication system (PACS) .</td></tr>
+                  <tr><td>Alternative Health record.</td></tr>
+                  <tr><td>smart skills.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Healthcare information Technology and Artificial Intelligence.</td></tr>
+                  <tr><td>Basics of Research Methodology .</td></tr>
+                  <tr><td>Biostatistics</td></tr>
+                  <tr><td>Legal Aspects of Health information management.</td></tr>
+                  <tr><td>Profession Ethics.</td></tr>
+                  <tr><td>Health informatics Project management.</td></tr>
+                  <tr><td>Graduation Project.</td></tr>
+                  <tr><td>Egyptian Laborlaw.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div id="healthit-year3" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الأول</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Artificial intelligence technological applications in Healhthcare.</td></tr>
+                  <tr><td>Patient workflow (patient journey).</td></tr>
+                  <tr><td>Innovation and critical thinking.</td></tr>
+                  <tr><td>English Language.</td></tr>
+                  <tr><td>Healthcare databases.</td></tr>
+                  <tr><td>Fundamentals oF computer Programming.</td></tr>
+                  <tr><td>effective communication.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Healthcare system Analysis.</td></tr>
+                  <tr><td>Health Information security.</td></tr>
+                  <tr><td>Quality & Accreditation in Healthcare.</td></tr>
+                  <tr><td>Healthcare financial management.</td></tr>
+                  <tr><td>English Language.</td></tr>
+                  <tr><td>Data Mining.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div id="healthit-year4" class="year-content">
+            <div class="term-section">
+              <div class="term-title">الترم الأول</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Total Quality management in Healthcare.</td></tr>
+                  <tr><td>Advanced Health information Research.</td></tr>
+                  <tr><td>Basic of marketing and business.</td></tr>
+                  <tr><td>Healthcare data engineering and programming.</td></tr>
+                  <tr><td>History of Technology.</td></tr>
+                  <tr><td>(Healthcare platforms for Initiatives)cse studies.</td></tr>
+                  <tr><td>Human resources management.</td></tr>
+                  <tr><td>English Language.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="term-section">
+              <div class="term-title">الترم الثاني</div>
+              <table class="subjects-table">
+                <thead><tr><th>المادة</th></tr></thead>
+                <tbody>
+                  <tr><td>Introduction to management and Leadersihp.</td></tr>
+                  <tr><td>Advanced healthcare information management and office automation and (AI).</td></tr>
+                  <tr><td>Medical imaging system planning.</td></tr>
+                  <tr><td>Healthcare data analytics.</td></tr>
+                  <tr><td>Emerging technologyies in Healthcare system.</td></tr>
+                  <tr><td>Graduation project.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
